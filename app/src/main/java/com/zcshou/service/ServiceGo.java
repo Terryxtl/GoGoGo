@@ -30,7 +30,6 @@ import androidx.core.app.NotificationCompat;
 import com.elvishew.xlog.XLog;
 import com.zcshou.gogogo.MainActivity;
 import com.zcshou.gogogo.R;
-import com.zcshou.joystick.JoyStick;
 
 public class ServiceGo extends Service {
     // 定位相关变量
@@ -51,13 +50,9 @@ public class ServiceGo extends Service {
     private boolean isStop = false;
     // 通知栏消息
     private static final int SERVICE_GO_NOTE_ID = 1;
-    private static final String SERVICE_GO_NOTE_ACTION_JOYSTICK_SHOW = "ShowJoyStick";
-    private static final String SERVICE_GO_NOTE_ACTION_JOYSTICK_HIDE = "HideJoyStick";
     private static final String SERVICE_GO_NOTE_CHANNEL_ID = "SERVICE_GO_NOTE";
     private static final String SERVICE_GO_NOTE_CHANNEL_NAME = "SERVICE_GO_NOTE";
     private NoteActionReceiver mActReceiver;
-    // 摇杆相关
-    private JoyStick mJoyStick;
 
     private final ServiceGoBinder mBinder = new ServiceGoBinder();
 
@@ -81,8 +76,6 @@ public class ServiceGo extends Service {
         initGoLocation();
 
         initNotification();
-
-        initJoyStick();
     }
 
     @Override
@@ -91,23 +84,25 @@ public class ServiceGo extends Service {
         mCurLat = intent.getDoubleExtra(MainActivity.LAT_MSG_ID, DEFAULT_LAT);
         mCurAlt = intent.getDoubleExtra(MainActivity.ALT_MSG_ID, DEFAULT_ALT);
 
-        mJoyStick.setCurrentPosition(mCurLng, mCurLat, mCurAlt);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         isStop = true;
-        mLocHandler.removeMessages(HANDLER_MSG_ID);
-        mLocHandlerThread.quit();
-
-        mJoyStick.destroy();
+        if (mLocHandler != null) {
+            mLocHandler.removeMessages(HANDLER_MSG_ID);
+        }
+        if (mLocHandlerThread != null) {
+            mLocHandlerThread.quit();
+        }
 
         removeTestProviderNetwork();
         removeTestProviderGPS();
 
-        unregisterReceiver(mActReceiver);
+        if (mActReceiver != null) {
+            unregisterReceiver(mActReceiver);
+        }
         stopForeground(STOP_FOREGROUND_REMOVE);
 
         super.onDestroy();
@@ -116,8 +111,7 @@ public class ServiceGo extends Service {
     private void initNotification() {
         mActReceiver = new NoteActionReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(SERVICE_GO_NOTE_ACTION_JOYSTICK_SHOW);
-        filter.addAction(SERVICE_GO_NOTE_ACTION_JOYSTICK_HIDE);
+        // No actions to register for joystick anymore
         registerReceiver(mActReceiver, filter);
 
         NotificationChannel mChannel = new NotificationChannel(SERVICE_GO_NOTE_CHANNEL_ID, SERVICE_GO_NOTE_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
@@ -127,50 +121,18 @@ public class ServiceGo extends Service {
             notificationManager.createNotificationChannel(mChannel);
         }
 
-        //准备intent
         Intent clickIntent = new Intent(this, MainActivity.class);
         PendingIntent clickPI = PendingIntent.getActivity(this, 1, clickIntent, PendingIntent.FLAG_IMMUTABLE);
-        Intent showIntent = new Intent(SERVICE_GO_NOTE_ACTION_JOYSTICK_SHOW);
-        PendingIntent showPendingPI = PendingIntent.getBroadcast(this, 0, showIntent, PendingIntent.FLAG_IMMUTABLE);
-        Intent hideIntent = new Intent(SERVICE_GO_NOTE_ACTION_JOYSTICK_HIDE);
-        PendingIntent hidePendingPI = PendingIntent.getBroadcast(this, 0, hideIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(this, SERVICE_GO_NOTE_CHANNEL_ID)
                 .setChannelId(SERVICE_GO_NOTE_CHANNEL_ID)
                 .setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText(getResources().getString(R.string.app_service_tips))
                 .setContentIntent(clickPI)
-                .addAction(new NotificationCompat.Action(null, getResources().getString(R.string.note_show), showPendingPI))
-                .addAction(new NotificationCompat.Action(null, getResources().getString(R.string.note_hide), hidePendingPI))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
 
         startForeground(SERVICE_GO_NOTE_ID, notification);
-    }
-
-    private void initJoyStick() {
-        mJoyStick = new JoyStick(this);
-        mJoyStick.setListener(new JoyStick.JoyStickClickListener() {
-            @Override
-            public void onMoveInfo(double speed, double disLng, double disLat, double angle) {
-                mSpeed = speed;
-                // 根据当前的经纬度和距离，计算下一个经纬度
-                // Latitude: 1 deg = 110.574 km // 纬度的每度的距离大约为 110.574km
-                // Longitude: 1 deg = 111.320*cos(latitude) km  // 经度的每度的距离从0km到111km不等
-                // 具体见：http://wp.mlab.tw/?p=2200
-                mCurLng += disLng / (111.320 * Math.cos(Math.abs(mCurLat) * Math.PI / 180));
-                mCurLat += disLat / 110.574;
-                mCurBea = (float) angle;
-            }
-
-            @Override
-            public void onPositionInfo(double lng, double lat, double alt) {
-                mCurLng = lng;
-                mCurLat = lat;
-                mCurAlt = alt;
-            }
-        });
-        mJoyStick.show();
     }
 
     private void initGoLocation() {
@@ -180,7 +142,6 @@ public class ServiceGo extends Service {
         mLocHandlerThread.start();
         // Handler 对象与 HandlerThread 的 Looper 对象的绑定
         mLocHandler = new Handler(mLocHandlerThread.getLooper()) {
-            // 这里的Handler对象可以看作是绑定在HandlerThread子线程中，所以handlerMessage里的操作是在子线程中运行的
             @Override
             public void handleMessage(@NonNull Message msg) {
                 try {
@@ -192,7 +153,6 @@ public class ServiceGo extends Service {
 
                         sendEmptyMessage(HANDLER_MSG_ID);
                     }
-                    mJoyStick.show();
                 } catch (InterruptedException e) {
                     XLog.e("SERVICEGO: ERROR - handleMessage");
                     Thread.currentThread().interrupt();
@@ -214,11 +174,9 @@ public class ServiceGo extends Service {
         }
     }
 
-    // 注意下面临时添加 @SuppressLint("wrongconstant") 以处理 addTestProvider 参数值的 lint 错误
     @SuppressLint("wrongconstant")
     private void addTestProviderGPS() {
         try {
-            // 注意，由于 android api 问题，下面的参数会提示错误(以下参数是通过相关API获取的真实GPS参数，不是随便写的)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 mLocManager.addTestProvider(LocationManager.GPS_PROVIDER, false, true, false,
                         false, true, true, true, ProviderProperties.POWER_USAGE_HIGH, ProviderProperties.ACCURACY_FINE);
@@ -236,14 +194,13 @@ public class ServiceGo extends Service {
 
     private void setLocationGPS() {
         try {
-            // 尽可能模拟真实的 GPS 数据
             Location loc = new Location(LocationManager.GPS_PROVIDER);
-            loc.setAccuracy(Criteria.ACCURACY_FINE);    // 设定此位置的估计水平精度，以米为单位。
-            loc.setAltitude(mCurAlt);                     // 设置高度，在 WGS 84 参考坐标系中的米
-            loc.setBearing(mCurBea);                       // 方向（度）
-            loc.setLatitude(mCurLat);                   // 纬度（度）
-            loc.setLongitude(mCurLng);                  // 经度（度）
-            loc.setTime(System.currentTimeMillis());    // 本地时间
+            loc.setAccuracy(Criteria.ACCURACY_FINE);
+            loc.setAltitude(mCurAlt);
+            loc.setBearing(mCurBea);
+            loc.setLatitude(mCurLat);
+            loc.setLongitude(mCurLng);
+            loc.setTime(System.currentTimeMillis());
             loc.setSpeed((float) mSpeed);
             loc.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
             Bundle bundle = new Bundle();
@@ -267,11 +224,9 @@ public class ServiceGo extends Service {
         }
     }
 
-    // 注意下面临时添加 @SuppressLint("wrongconstant") 以处理 addTestProvider 参数值的 lint 错误
     @SuppressLint("wrongconstant")
     private void addTestProviderNetwork() {
         try {
-            // 注意，由于 android api 问题，下面的参数会提示错误(以下参数是通过相关API获取的真实NETWORK参数，不是随便写的)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 mLocManager.addTestProvider(LocationManager.NETWORK_PROVIDER, true, false,
                         true, true, true, true,
@@ -291,14 +246,13 @@ public class ServiceGo extends Service {
 
     private void setLocationNetwork() {
         try {
-            // 尽可能模拟真实的 NETWORK 数据
             Location loc = new Location(LocationManager.NETWORK_PROVIDER);
-            loc.setAccuracy(Criteria.ACCURACY_COARSE);  // 设定此位置的估计水平精度，以米为单位。
-            loc.setAltitude(mCurAlt);                     // 设置高度，在 WGS 84 参考坐标系中的米
-            loc.setBearing(mCurBea);                       // 方向（度）
-            loc.setLatitude(mCurLat);                   // 纬度（度）
-            loc.setLongitude(mCurLng);                  // 经度（度）
-            loc.setTime(System.currentTimeMillis());    // 本地时间
+            loc.setAccuracy(Criteria.ACCURACY_COARSE);
+            loc.setAltitude(mCurAlt);
+            loc.setBearing(mCurBea);
+            loc.setLatitude(mCurLat);
+            loc.setLongitude(mCurLng);
+            loc.setTime(System.currentTimeMillis());
             loc.setSpeed((float) mSpeed);
             loc.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
 
@@ -311,29 +265,23 @@ public class ServiceGo extends Service {
     public class NoteActionReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                if (action.equals(SERVICE_GO_NOTE_ACTION_JOYSTICK_SHOW)) {
-                    mJoyStick.show();
-                }
-
-                if (action.equals(SERVICE_GO_NOTE_ACTION_JOYSTICK_HIDE)) {
-                    mJoyStick.hide();
-                }
-            }
+            // String action = intent.getAction(); // No actions related to joystick anymore
+            // if (action != null) {
+            // }
         }
     }
 
     public class ServiceGoBinder extends Binder {
         public void setPosition(double lng, double lat, double alt) {
-            mLocHandler.removeMessages(HANDLER_MSG_ID);
+            if (mLocHandler != null) {
+                mLocHandler.removeMessages(HANDLER_MSG_ID);
+            }
             mCurLng = lng;
             mCurLat = lat;
             mCurAlt = alt;
-            mLocHandler.sendEmptyMessage(HANDLER_MSG_ID);
-            mJoyStick.setCurrentPosition(mCurLng, mCurLat, mCurAlt);
+            if (mLocHandler != null) {
+                mLocHandler.sendEmptyMessage(HANDLER_MSG_ID);
+            }
         }
     }
 }
-
-

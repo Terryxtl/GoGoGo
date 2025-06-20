@@ -22,21 +22,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.text.Editable;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+// import android.view.Window; // No longer needed after showProtocolDialog removal
+// import android.view.WindowManager; // No longer needed after showProtocolDialog removal
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
+// import android.widget.CheckBox; // No longer used mPtlCheckBox field removed
+// import android.widget.DatePicker; // No longer used after showRegisterDialog removal
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -88,8 +84,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+// import org.json.JSONArray; // Not used directly after UI for update is removed (or if it was only for register)
+// import org.json.JSONException; // Not used directly after UI for update/register is removed
 import org.json.JSONObject;
 
 import java.io.File;
@@ -110,7 +106,7 @@ import com.zcshou.utils.MapUtils;
 
 import com.elvishew.xlog.XLog;
 
-import io.noties.markwon.Markwon;
+import io.noties.markwon.Markwon; // Still used for Update Dialog
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -132,8 +128,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
 
     /*============================== NavigationView 相关 ==============================*/
     private NavigationView mNavigationView;
-    private CheckBox mPtlCheckBox;
-    private final JSONObject mReg = new JSONObject();
+    // private CheckBox mPtlCheckBox; // Field removed as it's no longer initialized or used
+    private final JSONObject mReg = new JSONObject(); // mReg seems related to registration, but not directly used by removed UI. Keep for now.
     /*============================== 主界面地图 相关 ==============================*/
     /************** 地图 *****************/
     public final static BitmapDescriptor mMapIndicator = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
@@ -509,135 +505,55 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                 startActivity(intent);
             });
 
-            mUserName.setOnClickListener(v -> {
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-                showRegisterDialog();
-            });
+            // mUserName.setOnClickListener(v -> { // Removed registration dialog trigger
+            //     DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            //
+            //     if (drawer.isDrawerOpen(GravityCompat.START)) {
+            //         drawer.closeDrawer(GravityCompat.START);
+            //     }
+            //     // showRegisterDialog(); // Removed registration dialog
+            // });
         }
     }
 
-    public void showRegisterDialog() {
-        final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.show();
-        alertDialog.setCancelable(false);
-        Window window = alertDialog.getWindow();
-        if (window != null) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-            window.setContentView(R.layout.register);
-            window.setGravity(Gravity.CENTER);
-            window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
-
-            final TextView mRegReq = window.findViewById(R.id.reg_request);
-            final TextView regResp = window.findViewById(R.id.reg_response);
-
-            final TextView regUserName = window.findViewById(R.id.reg_user_name);
-            regUserName.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.length() >= 3) {
-                        try {
-                            mReg.put("UserName", s.toString());
-                            mRegReq.setText(mReg.toString());
-                        } catch (JSONException e) {
-                            XLog.e("ERROR: username");
-                        }
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-
-            DatePicker mDatePicker = window.findViewById(R.id.date_picker);
-            mDatePicker.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> {
-                try {
-                    mReg.put("DateTime", 1111);
-                    mRegReq.setText(mReg.toString());
-                } catch (JSONException e) {
-                    XLog.e("ERROR: DateTime");
-                }
-            });
-
-            mPtlCheckBox = window.findViewById(R.id.reg_check);
-            mPtlCheckBox.setOnClickListener(v -> {
-                if (mPtlCheckBox.isChecked()) {
-                    showProtocolDialog();
-                }
-            });
-
-            TextView regCancel = window.findViewById(R.id.reg_cancel);
-            regCancel.setOnClickListener(v -> alertDialog.cancel());
-
-            TextView regAgree = window.findViewById(R.id.reg_agree);
-            regAgree.setOnClickListener(v -> {
-                if (!mPtlCheckBox.isChecked()) {
-                    GoUtils.DisplayToast(this, getResources().getString(R.string.app_error_protocol));
-                    return;
-                }
-                if (TextUtils.isEmpty(regUserName.getText())) {
-                    GoUtils.DisplayToast(this,  getResources().getString(R.string.app_error_username));
-                    return;
-                }
-                if (TextUtils.isEmpty(regResp.getText())) {
-                    GoUtils.DisplayToast(this, getResources().getString(R.string.app_error_code));
-                    return;
-                }
-                try {
-                    mReg.put("RegReq", mReg.toString());
-                    mReg.put("ReqResp", regResp.toString());
-
-                } catch (JSONException e) {
-                    XLog.e("ERROR: reg req");
-                }
-
-                alertDialog.cancel();
-            });
-        }
-    }
-
-    private void showProtocolDialog() {
-        final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.show();
-        alertDialog.setCancelable(false);
-        Window window = alertDialog.getWindow();
-        if (window != null) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);      // 防止出现闪屏
-            window.setContentView(R.layout.user_agreement);
-            window.setGravity(Gravity.CENTER);
-            window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
-
-            TextView tvContent = window.findViewById(R.id.tv_content);
-            Button tvCancel = window.findViewById(R.id.tv_cancel);
-            Button tvAgree = window.findViewById(R.id.tv_agree);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
-            ssb.append(getResources().getString(R.string.app_agreement));
-
-            tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-            tvContent.setText(ssb, TextView.BufferType.SPANNABLE);
-
-            tvCancel.setOnClickListener(v -> {
-                mPtlCheckBox.setChecked(false);
-                alertDialog.cancel();
-            });
-
-            tvAgree.setOnClickListener(v -> {
-                mPtlCheckBox.setChecked(true);
-                alertDialog.cancel();
-            });
-        }
-    }
+    // showProtocolDialog() is now orphaned as it was only called by showRegisterDialog().
+    // It also referenced mPtlCheckBox which is no longer initialized.
+    // Removing the method entirely.
+    // private void showProtocolDialog() {
+    //     final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this).create();
+    //     alertDialog.show();
+    //     alertDialog.setCancelable(false);
+    //     Window window = alertDialog.getWindow();
+    //     if (window != null) {
+    //         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);      // 防止出现闪屏
+    //         window.setContentView(R.layout.user_agreement);
+    //         window.setGravity(Gravity.CENTER);
+    //         window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
+    //
+    //         TextView tvContent = window.findViewById(R.id.tv_content);
+    //         Button tvCancel = window.findViewById(R.id.tv_cancel);
+    //         Button tvAgree = window.findViewById(R.id.tv_agree);
+    //         SpannableStringBuilder ssb = new SpannableStringBuilder();
+    //         ssb.append(getResources().getString(R.string.app_agreement));
+    //
+    //         tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+    //         tvContent.setText(ssb, TextView.BufferType.SPANNABLE);
+    //
+    //         tvCancel.setOnClickListener(v -> {
+    //             // if (mPtlCheckBox != null) { // mPtlCheckBox is part of removed showRegisterDialog
+    //             //     mPtlCheckBox.setChecked(false);
+    //             // }
+    //             alertDialog.cancel();
+    //         });
+    //
+    //         tvAgree.setOnClickListener(v -> {
+    //             // if (mPtlCheckBox != null) { // mPtlCheckBox is part of removed showRegisterDialog
+    //             //     mPtlCheckBox.setChecked(true);
+    //             // }
+    //             alertDialog.cancel();
+    //         });
+    //     }
+    // }
 
     /*============================== 主界面地图 相关 ==============================*/
     private void initMap() {
@@ -857,9 +773,9 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                 mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
             }
 
-            if (checkedId == R.id.mapSatellite) {
-                mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-            }
+            // if (checkedId == R.id.mapSatellite) { // Removed satellite map type
+            //     mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+            // }
         });
 
         ImageButton curPosBtn = this.findViewById(R.id.cur_position);
@@ -1401,11 +1317,11 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                                 final android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(MainActivity.this).create();
                                 alertDialog.show();
                                 alertDialog.setCancelable(false);
-                                Window window = alertDialog.getWindow();
+                                android.view.Window window = alertDialog.getWindow(); // Changed to android.view.Window
                                 if (window != null) {
-                                    window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);      // 防止出现闪屏
+                                    window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND);      // 防止出现闪屏 // Changed to android.view.WindowManager
                                     window.setContentView(R.layout.update);
-                                    window.setGravity(Gravity.CENTER);
+                                    window.setGravity(android.view.Gravity.CENTER); // Changed to android.view.Gravity
                                     window.setWindowAnimations(R.style.DialogAnimFadeInFadeOut);
 
                                     TextView updateTitle = window.findViewById(R.id.update_title);
@@ -1423,7 +1339,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                                     updateCancel.setOnClickListener(v -> alertDialog.cancel());
 
                                     /* 这里用来保存下载地址 */
-                                    JSONArray jsonArray = new JSONArray(getRetJson.getString("assets"));
+                                    org.json.JSONArray jsonArray = new org.json.JSONArray(getRetJson.getString("assets")); // Changed to org.json.JSONArray
                                     JSONObject jsonObject = jsonArray.getJSONObject(0);
                                     String download_url = jsonObject.getString("browser_download_url");
                                     mUpdateFilename = jsonObject.getString("name");
@@ -1438,7 +1354,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener {
                             } else {
                                 GoUtils.DisplayToast(MainActivity.this, getResources().getString(R.string.update_last));
                             }
-                        } catch (JSONException e) {
+                        } catch (org.json.JSONException e) { // Changed to org.json.JSONException
                             XLog.e("ERROR: resolve json");
                             showFail();
                         }
