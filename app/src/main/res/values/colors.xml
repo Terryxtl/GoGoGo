@@ -1,10 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff008577</color>
-    <color name="colorPrimaryDark">#ff008577</color>
-    <color name="colorAccent">#ff00897B</color>
+    <!-- Material 3 Colors -->
+    <!-- Light Theme -->
+    <color name="colorPrimaryLight">#6750A4</color>
+    <color name="colorOnPrimaryLight">#FFFFFF</color>
+    <color name="colorPrimaryContainerLight">#EADDFF</color>
+    <color name="colorOnPrimaryContainerLight">#21005D</color>
+    <color name="colorSecondaryLight">#625B71</color>
+    <color name="colorOnSecondaryLight">#FFFFFF</color>
+    <color name="colorSecondaryContainerLight">#E8DEF8</color>
+    <color name="colorOnSecondaryContainerLight">#1D192B</color>
+    <color name="colorTertiaryLight">#7D5260</color>
+    <color name="colorOnTertiaryLight">#FFFFFF</color>
+    <color name="colorTertiaryContainerLight">#FFD8E4</color>
+    <color name="colorOnTertiaryContainerLight">#31111D</color>
+    <color name="colorErrorLight">#B3261E</color>
+    <color name="colorOnErrorLight">#FFFFFF</color>
+    <color name="colorErrorContainerLight">#F9DEDC</color>
+    <color name="colorOnErrorContainerLight">#410E0B</color>
+    <color name="colorBackgroundLight">#FFFBFE</color>
+    <color name="colorOnBackgroundLight">#1C1B1F</color>
+    <color name="colorSurfaceLight">#FFFBFE</color>
+    <color name="colorOnSurfaceLight">#1C1B1F</color>
+    <color name="colorSurfaceVariantLight">#E7E0EC</color>
+    <color name="colorOnSurfaceVariantLight">#49454F</color>
+    <color name="colorOutlineLight">#79747E</color>
+    <color name="colorOutlineVariantLight">#CAC4D0</color>
+    <color name="colorSurfaceInverseLight">#313033</color>
+    <color name="colorOnSurfaceInverseLight">#F4EFF4</color>
+    <color name="colorPrimaryInverseLight">#D0BCFF</color>
 
-    <color name="white">#ffffff</color> <!-- 白色 -->
+    <!-- Dark Theme -->
+    <color name="colorPrimaryDark">#D0BCFF</color>
+    <color name="colorOnPrimaryDark">#381E72</color>
+    <color name="colorPrimaryContainerDark">#4F378B</color>
+    <color name="colorOnPrimaryContainerDark">#EADDFF</color>
+    <color name="colorSecondaryDark">#CCC2DC</color>
+    <color name="colorOnSecondaryDark">#332D41</color>
+    <color name="colorSecondaryContainerDark">#4A4458</color>
+    <color name="colorOnSecondaryContainerDark">#E8DEF8</color>
+    <color name="colorTertiaryDark">#EFB8C8</color>
+    <color name="colorOnTertiaryDark">#492532</color>
+    <color name="colorTertiaryContainerDark">#633B48</color>
+    <color name="colorOnTertiaryContainerDark">#FFD8E4</color>
+    <color name="colorErrorDark">#F2B8B5</color>
+    <color name="colorOnErrorDark">#601410</color>
+    <color name="colorErrorContainerDark">#8C1D18</color>
+    <color name="colorOnErrorContainerDark">#F9DEDC</color>
+    <color name="colorBackgroundDark">#1C1B1F</color>
+    <color name="colorOnBackgroundDark">#E6E1E5</color>
+    <color name="colorSurfaceDark">#1C1B1F</color>
+    <color name="colorOnSurfaceDark">#E6E1E5</color>
+    <color name="colorSurfaceVariantDark">#49454F</color>
+    <color name="colorOnSurfaceVariantDark">#CAC4D0</color>
+    <color name="colorOutlineDark">#938F99</color>
+    <color name="colorOutlineVariantDark">#49454F</color>
+    <color name="colorSurfaceInverseDark">#E6E1E5</color>
+    <color name="colorOnSurfaceInverseDark">#313033</color>
+    <color name="colorPrimaryInverseDark">#6750A4</color>
+
+    <!-- Original App Colors (keeping them for now, might remove later if not needed) -->
+    <color name="colorPrimary">#ff008577</color> <!-- Original primary, consider replacing with M3 primary -->
+    <color name="colorPrimaryDarkOriginal">#ff008577</color> <!-- Original primary dark, consider replacing -->
+    <color name="colorAccent">#ff00897B</color> <!-- Original accent, consider replacing with M3 secondary/tertiary -->
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="half_black">#808080</color>
+    <color name="white_pressed">#f1f1f1</color>
+    <color name="blue_semi_transparent">#805677fc</color>
+    <color name="blue_semi_transparent_pressed">#80738ffe</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="saffron">#F4B63E</color>
+    <color name="eggplant">#663D4E</color>
+
+    <!-- Other existing colors from the app, review if they are still needed or can be mapped to M3 -->
     <color name="ivory">#fffff0</color> <!-- 象牙色 -->
     <color name="lightyellow">#ffffe0</color> <!-- 亮黄色 -->
     <color name="yellow">#ffff00</color> <!-- 黄色 -->
@@ -149,12 +219,4 @@
     <color name="mediumblue">#0000cd</color> <!-- 中兰色 -->
     <color name="darkblue">#00008b</color> <!-- 暗蓝色 -->
     <color name="navy">#000080</color> <!-- 海军色 -->
-    <color name="black">#000000</color> <!-- 黑色 -->
-    <color name="half_black">#808080</color>
-    <color name="white_pressed">#f1f1f1</color>
-    <color name="blue_semi_transparent">#805677fc</color>
-    <color name="blue_semi_transparent_pressed">#80738ffe</color>
-    <color name="black_semi_transparent">#B2000000</color>
-    <color name="saffron">#F4B63E</color>
-    <color name="eggplant">#663D4E</color>
 </resources>

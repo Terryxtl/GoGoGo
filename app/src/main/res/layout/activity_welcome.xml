@@ -10,7 +10,7 @@
         app:srcCompat="@drawable/welcome"
         android:contentDescription="@null" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/startButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_gravity="bottom|center"
         android:layout_margin="120dp" />
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/check_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

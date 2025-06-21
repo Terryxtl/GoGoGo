@@ -1,0 +1,47 @@
+<resources>
+    <!-- Base application theme for Dark Mode. -->
+    <style name="AppTheme" parent="Theme.Material3.Dark">
+        <!-- Material 3 color attributes -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryDark</item>
+        <item name="colorPrimaryContainer">@color/colorPrimaryContainerDark</item>
+        <item name="colorOnPrimaryContainer">@color/colorOnPrimaryContainerDark</item>
+        <item name="colorSecondary">@color/colorSecondaryDark</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryDark</item>
+        <item name="colorSecondaryContainer">@color/colorSecondaryContainerDark</item>
+        <item name="colorOnSecondaryContainer">@color/colorOnSecondaryContainerDark</item>
+        <item name="colorTertiary">@color/colorTertiaryDark</item>
+        <item name="colorOnTertiary">@color/colorOnTertiaryDark</item>
+        <item name="colorTertiaryContainer">@color/colorTertiaryContainerDark</item>
+        <item name="colorOnTertiaryContainer">@color/colorOnTertiaryContainerDark</item>
+        <item name="colorError">@color/colorErrorDark</item>
+        <item name="colorOnError">@color/colorOnErrorDark</item>
+        <item name="colorErrorContainer">@color/colorErrorContainerDark</item>
+        <item name="colorOnErrorContainer">@color/colorOnErrorContainerDark</item>
+        <item name="android:colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundDark</item>
+        <item name="colorSurface">@color/colorSurfaceDark</item>
+        <item name="colorOnSurface">@color/colorOnSurfaceDark</item>
+        <item name="colorSurfaceVariant">@color/colorSurfaceVariantDark</item>
+        <item name="colorOnSurfaceVariant">@color/colorOnSurfaceVariantDark</item>
+        <item name="colorOutline">@color/colorOutlineDark</item>
+        <item name="colorOutlineVariant">@color/colorOutlineVariantDark</item> <!-- Corrected from colorOutlineVariantLight -->
+        <item name="colorSurfaceInverse">@color/colorSurfaceInverseDark</item>
+        <item name="colorOnSurfaceInverse">@color/colorOnSurfaceInverseDark</item>
+        <item name="colorPrimaryInverse">@color/colorPrimaryInverseDark</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item> <!-- For dark theme, status bar icons should be light -->
+
+        <!-- Button style -->
+        <item name="materialButtonStyle">@style/AppTheme.Button</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
+    </style>
+
+    <!-- NoActionBar theme for Dark Mode -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

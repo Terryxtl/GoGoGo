@@ -21,7 +21,7 @@
 
         <RadioGroup
             android:id="@+id/RadioGroupMapType"
-            android:layout_width="90dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
@@ -29,7 +29,7 @@
             android:layout_marginTop="4dip"
             android:orientation="vertical">
 
-            <RadioButton
+            <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/mapNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,63 +37,55 @@
                 android:checked="true"
                 android:minHeight="48dp"
                 android:text="@string/map_pic_normal"
-                android:textColor="#00796B" />
+                android:textColor="?attr/colorOnSurface" />
         </RadioGroup>
 
-        <ImageButton
+        <com.google.android.material.button.MaterialIconButton
             android:id="@+id/cur_position"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="350dp"
             android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/cur_position"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_home_position"
-            app:tint="@color/colorAccent" />
+            app:srcCompat="@drawable/ic_home_position" />
 
-        <ImageButton
+        <com.google.android.material.button.MaterialIconButton
             android:id="@+id/zoom_in"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="383dp"
             android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/zoom_in"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_zoom_in"
-            app:tint="@color/colorAccent" />
+            app:srcCompat="@drawable/ic_zoom_in" />
 
-        <ImageButton
+        <com.google.android.material.button.MaterialIconButton
             android:id="@+id/zoom_out"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="416dp"
             android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/zoom_out"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_zoom_out"
-            app:tint="@color/colorAccent" />
+            app:srcCompat="@drawable/ic_zoom_out" />
 
-        <ImageButton
+        <com.google.android.material.button.MaterialIconButton
             android:id="@+id/input_pos"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="240dp"
             android:layout_marginEnd="10dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/input_button"
-            android:theme="@style/RippleWhite"
-            app:srcCompat="@drawable/ic_input"
-            app:tint="@color/colorAccent" />
+            app:srcCompat="@drawable/ic_input" />
 
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

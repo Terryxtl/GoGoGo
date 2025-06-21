@@ -1,0 +1,47 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.Material3.DayNight">
+        <!-- Material 3 color attributes -->
+        <item name="colorPrimary">@color/colorPrimaryLight</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryLight</item>
+        <item name="colorPrimaryContainer">@color/colorPrimaryContainerLight</item>
+        <item name="colorOnPrimaryContainer">@color/colorOnPrimaryContainerLight</item>
+        <item name="colorSecondary">@color/colorSecondaryLight</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryLight</item>
+        <item name="colorSecondaryContainer">@color/colorSecondaryContainerLight</item>
+        <item name="colorOnSecondaryContainer">@color/colorOnSecondaryContainerLight</item>
+        <item name="colorTertiary">@color/colorTertiaryLight</item>
+        <item name="colorOnTertiary">@color/colorOnTertiaryLight</item>
+        <item name="colorTertiaryContainer">@color/colorTertiaryContainerLight</item>
+        <item name="colorOnTertiaryContainer">@color/colorOnTertiaryContainerLight</item>
+        <item name="colorError">@color/colorErrorLight</item>
+        <item name="colorOnError">@color/colorOnErrorLight</item>
+        <item name="colorErrorContainer">@color/colorErrorContainerLight</item>
+        <item name="colorOnErrorContainer">@color/colorOnErrorContainerLight</item>
+        <item name="android:colorBackground">@color/colorBackgroundLight</item>
+        <item name="colorOnBackground">@color/colorOnBackgroundLight</item>
+        <item name="colorSurface">@color/colorSurfaceLight</item>
+        <item name="colorOnSurface">@color/colorOnSurfaceLight</item>
+        <item name="colorSurfaceVariant">@color/colorSurfaceVariantLight</item>
+        <item name="colorOnSurfaceVariant">@color/colorOnSurfaceVariantLight</item>
+        <item name="colorOutline">@color/colorOutlineLight</item>
+        <item name="colorOutlineVariant">@color/colorOutlineVariantLight</item>
+        <item name="colorSurfaceInverse">@color/colorSurfaceInverseLight</item>
+        <item name="colorOnSurfaceInverse">@color/colorOnSurfaceInverseLight</item>
+        <item name="colorPrimaryInverse">@color/colorPrimaryInverseLight</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- For light theme, status bar icons should be dark -->
+
+        <!-- Button style -->
+        <item name="materialButtonStyle">@style/AppTheme.Button</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
+    </style>
+
+    <!-- NoActionBar theme -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>
